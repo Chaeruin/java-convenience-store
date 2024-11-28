@@ -5,8 +5,8 @@ import java.io.File;
 import java.io.FileReader;
 import java.io.IOException;
 import java.text.ParseException;
-import java.text.SimpleDateFormat;
-import java.util.Date;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.LinkedList;
 import java.util.List;
 import store.domain.Product;
@@ -45,9 +45,9 @@ public class FileRead {
         String input;
         while ((input = br.readLine()) != null) {
             String[] inputs = input.split(",");
-            SimpleDateFormat sf = new SimpleDateFormat("yyyy-MM-dd");
-            Date startDate = sf.parse(inputs[3]);
-            Date endDate = sf.parse(inputs[4]);
+            DateTimeFormatter sf = DateTimeFormatter.ofPattern("yyyy-MM-dd");
+            LocalDateTime startDate = LocalDateTime.parse(inputs[3], sf);
+            LocalDateTime endDate = LocalDateTime.parse(inputs[4], sf);
             Promotion promotion = new Promotion(inputs[0], Integer.parseInt(inputs[1]), Integer.parseInt(inputs[2]),
                     startDate, endDate);
             promotions.add(promotion);

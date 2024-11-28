@@ -3,7 +3,7 @@ package store.domain;
 public class Products {
     private final Product product;
     private final Promotion promotion;
-    private final int quantity;
+    private int quantity;
 
     public Products(Product product, Promotion promotion, int quantity) {
         this.product = product;
@@ -21,5 +21,9 @@ public class Products {
 
     public int getQuantity() {
         return this.quantity;
+    }
+
+    public void setQuantity(int quantity) {
+        this.quantity = quantity;
     }
 }

@@ -1,14 +1,14 @@
 package store.dto;
 
-import java.util.Date;
+import java.time.LocalDateTime;
 import store.domain.Promotion;
 
 public record PromotionStatus(
         String name,
         int buy,
         int get,
-        Date startDate,
-        Date endDate
+        LocalDateTime startDate,
+        LocalDateTime endDate
 ) {
     public static PromotionStatus of(final Promotion promotion) {
         return new PromotionStatus(
