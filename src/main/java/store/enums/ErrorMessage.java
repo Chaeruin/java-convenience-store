@@ -1,4 +1,4 @@
-package enums;
+package store.enums;
 
 public enum ErrorMessage {
 
