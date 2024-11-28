@@ -1,14 +1,57 @@
 package store.service;
 
+import java.util.LinkedList;
 import java.util.List;
 import store.domain.Inventory;
+import store.domain.Product;
 import store.domain.Products;
+import store.utils.Finder;
 
 public class InventoryService {
 
     // 파일 입력 products to inventory  resetting service
     // 1. inventory stock setting / 프로모만 존재 일반재고 미존재 추가
     public List<Inventory> resettingReadInventory(List<Products> products) {
+        List<Inventory> inventories = new LinkedList<>();
+        for (Products product : products) {
+            addToInvetoryProduct(inventories, product);
+        }
+        for (Inventory inventory : inventories) {
+            if (inventory.getProducts().size() == 1) {
+                addToNullProduct(inventory);
+            }
+        }
+        return inventories;
+    }
+
+    public void addToInvetoryProduct(List<Inventory> inventories, Products product) {
+        // 같은 이름의 상품이 존재하는 경우
+        Inventory sameInv;
+        if ((sameInv = isExistInventory(inventories, product.getProduct().getName())) != null) {
+            sameInv.getProducts().add(product);
+            sameInv.setStocks(sameInv.getAllQuantities());
+        } else {
+            List<Products> pr = new LinkedList<>();
+            pr.add(product);
+            inventories.add(new Inventory(pr, product.getQuantity()));
+        }
+    }
+
+    public void addToNullProduct(Inventory inventory) {
+        for (Products product : inventory.getProducts()) {
+            if (product.getPromotion() != null) {
+                Product pr = product.getProduct();
+                inventory.getProducts().add(new Products(pr, null, 0));
+            }
+        }
+    }
+
+    public Inventory isExistInventory(List<Inventory> inventories, String name) {
+        for (Inventory inventory : inventories) {
+            if (Finder.findProductByName(inventory.getProducts(), name) != null) {
+                return inventory;
+            }
+        }
         return null;
     }
 
