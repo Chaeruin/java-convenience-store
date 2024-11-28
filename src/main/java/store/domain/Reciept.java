@@ -13,5 +13,13 @@ public class Reciept {
         this.isMembership = isMembership;
     }
 
+    public List<Products> getBuyingProducts() {
+        return this.buyingProducts;
+    }
+
+    public List<Products> getPresentProducts() {
+        return this.presentProducts;
+    }
+
     /// 가격계산 여기서 처리
 }
