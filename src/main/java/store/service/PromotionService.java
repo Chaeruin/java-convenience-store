@@ -108,12 +108,15 @@ public class PromotionService {
         Product pr = product.getProduct();
         Promotion promo = product.getPromotion();
         Products invStock = Finder.findProductByName(inventory.getProducts(), pr.getName());
-        int notPresentNumber = 0;
+        int notPresentNumber = casesNotPresent(product, promotionName);
         if (product.getQuantity() > invStock.getQuantity()) {
-            notPresentNumber = product.getQuantity() - invStock.getQuantity() + casesNotPresent(product, promotionName);
-            return new Products(pr, promo, notPresentNumber);
+            notPresentNumber = product.getQuantity() - casesPresentNotYet(invStock, promotionName);
         }
-        return null;
+        if (product.getQuantity() < invStock.getQuantity()) {
+            return null;
+        }
+
+        return new Products(pr, promo, notPresentNumber);
     }
 
     public int casesNotPresent(Products product, String promotionName) {
@@ -123,6 +126,17 @@ public class PromotionService {
             return product.getQuantity() % 2;
         } else if (promotionName.equals(PromotionName.BRIEF_DISCOUNT.getName())) {
             return product.getQuantity() % 2;
+        }
+        return 0;
+    }
+
+    public int casesPresentNotYet(Products invStock, String promotionName) {
+        if (promotionName.equals(PromotionName.SPARKLING.getName())) {
+            return (invStock.getQuantity() / 3) * 3;
+        } else if (promotionName.equals(PromotionName.MD_RECOMMAND.getName())) {
+            return (invStock.getQuantity() / 2) * 2;
+        } else if (promotionName.equals(PromotionName.BRIEF_DISCOUNT.getName())) {
+            return (invStock.getQuantity() / 2) * 2;
         }
         return 0;
     }
@@ -148,7 +162,7 @@ public class PromotionService {
         Product pr = product.getProduct();
         Promotion promo = product.getPromotion();
         Products invStock = Finder.findProductByName(inventory.getProducts(), pr.getName());
-        if (invStock.getQuantity() < product.getQuantity()) {
+        if (invStock.getQuantity() <= product.getQuantity()) {
             return null;
         }
         int yesPresentNumber = 0;

@@ -50,6 +50,7 @@ public class StoreController {
 
             if (canPresents.size() != 0) {
                 setPresent(buyProducts, canPresents, presentations);
+                cannotPresents = promotionService.addNotPresent(setInventory, buyProducts);
             }
             if (cannotPresents.size() != 0) {
                 setNotPresent(restart, cannotPresents);

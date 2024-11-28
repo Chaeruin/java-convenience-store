@@ -55,6 +55,30 @@ class ApplicationTest extends NsTest {
     }
 
     @Test
+    void 프로모션_상품_구매_초과2() {
+        assertSimpleTest(() -> {
+            run("[콜라-12],[에너지바-5]", "Y", "Y", "N");
+            assertThat(output().replaceAll("\\s", "")).contains("");
+        });
+    }
+
+    @Test
+    void 더블_프로모션_상품_구매() {
+        assertSimpleTest(() -> {
+            run("[콜라-10],[감자칩-5]", "Y", "Y", "Y", "N");
+            assertThat(output().replaceAll("\\s", "")).contains("");
+        });
+    }
+
+    @Test
+    void 다수_일반_프로모션_상품_구매() {
+        assertSimpleTest(() -> {
+            run("[콜라-5],[감자칩-3],[물-2],[오렌지주스-1]", "Y", "Y", "Y", "Y", "N");
+            assertThat(output().replaceAll("\\s", "")).contains("");
+        });
+    }
+
+    @Test
     void 프로모션_상품_구매_미달() {
         assertSimpleTest(() -> {
             run("[콜라-5],[에너지바-5]", "Y", "Y", "N");
