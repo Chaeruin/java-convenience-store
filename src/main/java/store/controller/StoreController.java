@@ -49,7 +49,7 @@ public class StoreController {
             List<Products> canPresents = promotionService.addYesPresent(setInventory, buyProducts);
 
             if (canPresents.size() != 0) {
-                setPresent(buyProducts, canPresents);
+                setPresent(buyProducts, canPresents, presentations);
             }
             if (cannotPresents.size() != 0) {
                 setNotPresent(restart, cannotPresents);
@@ -69,11 +69,13 @@ public class StoreController {
         }
     }
 
-    public void setPresent(List<Products> buyProducts, List<Products> canPresents) {
+    public void setPresent(List<Products> buyProducts, List<Products> canPresents, List<Products> presentations) {
         for (Products prs : canPresents) {
             if (getYesMorePromotionHandler(prs).equals("Y")) {
                 Products invProduct = Finder.findProductByName(buyProducts, prs.getProduct().getName());
                 invProduct.setQuantity(invProduct.getQuantity() + prs.getQuantity());
+                Products present = Finder.findProductByName(presentations, prs.getProduct().getName());
+                present.setQuantity(present.getQuantity() + 1);
             }
         }
     }

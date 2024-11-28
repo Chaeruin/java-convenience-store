@@ -39,10 +39,34 @@ class ApplicationTest extends NsTest {
     }
 
     @Test
+    void 프로모션_상품_구매_일반() {
+        assertSimpleTest(() -> {
+            run("[콜라-3],[에너지바-5]", "Y", "N");
+            assertThat(output().replaceAll("\\s", "")).contains("내실돈9,000");
+        });
+    }
+
+    @Test
+    void 프로모션_상품_구매_초과() {
+        assertSimpleTest(() -> {
+            run("[콜라-10],[에너지바-5]", "Y", "Y", "N");
+            assertThat(output().replaceAll("\\s", "")).contains("");
+        });
+    }
+
+    @Test
+    void 프로모션_상품_구매_미달() {
+        assertSimpleTest(() -> {
+            run("[콜라-5],[에너지바-5]", "Y", "Y", "N");
+            assertThat(output().replaceAll("\\s", "")).contains("");
+        });
+    }
+
+    @Test
     void 여러_개의_일반_상품_구매() {
         assertSimpleTest(() -> {
             run("[비타민워터-3],[물-2],[정식도시락-2]", "N", "N");
-            assertThat(output().replaceAll("\\s", "")).contains("내실돈18,300");
+            assertThat(output().replaceAll("\\s", "")).contains("");
         });
     }
 

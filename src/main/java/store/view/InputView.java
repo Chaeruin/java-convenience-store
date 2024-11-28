@@ -11,13 +11,13 @@ public class InputView {
     }
 
     public String getYesMorePromotion(Products product) {
-        System.out.println("현재" + product.getProduct().getName() + "은(는) " + product.getQuantity()
+        System.out.println("현재 " + product.getProduct().getName() + "은(는) " + product.getQuantity()
                 + "개를 무료로 더 받을 수 있습니다. 추가하시겠습니까? (Y/N)");
         return Console.readLine();
     }
 
     public String getNoMorePromotion(Products product) {
-        System.out.println("현재" + product.getProduct().getName() + " " + product.getQuantity()
+        System.out.println("현재 " + product.getProduct().getName() + " " + product.getQuantity()
                 + "개는 프로모션 할인이 적용되지 않습니다. 그래도 구매하시겠습니까? (Y/N)");
         return Console.readLine();
     }

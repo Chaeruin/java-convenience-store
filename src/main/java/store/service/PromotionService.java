@@ -94,7 +94,10 @@ public class PromotionService {
         for (Products product : buyProducts) {
             if (product.getPromotion() != null && DateConverter.isDateInPromotions(product.getPromotion())) {
                 Inventory inv = Finder.findInventoryByName(inventories, product.getProduct().getName());
-                cannotPresent.add(getCannotPresent(product, inv));
+                Products products = getCannotPresent(product, inv);
+                if (products != null) {
+                    cannotPresent.add(products);
+                }
             }
         }
         return cannotPresent;
@@ -105,8 +108,12 @@ public class PromotionService {
         Product pr = product.getProduct();
         Promotion promo = product.getPromotion();
         Products invStock = Finder.findProductByName(inventory.getProducts(), pr.getName());
-        int notPresentNumber = product.getQuantity() - invStock.getQuantity() + casesNotPresent(product, promotionName);
-        return new Products(pr, promo, notPresentNumber);
+        int notPresentNumber = 0;
+        if (product.getQuantity() > invStock.getQuantity()) {
+            notPresentNumber = product.getQuantity() - invStock.getQuantity() + casesNotPresent(product, promotionName);
+            return new Products(pr, promo, notPresentNumber);
+        }
+        return null;
     }
 
     public int casesNotPresent(Products product, String promotionName) {
@@ -127,7 +134,10 @@ public class PromotionService {
         for (Products product : buyProducts) {
             if (product.getPromotion() != null && DateConverter.isDateInPromotions(product.getPromotion())) {
                 Inventory inv = Finder.findInventoryByName(inventories, product.getProduct().getName());
-                canPresent.add(getCanPresent(product, inv));
+                Products products = getCanPresent(product, inv);
+                if (products != null) {
+                    canPresent.add(products);
+                }
             }
         }
         return canPresent;
@@ -141,7 +151,10 @@ public class PromotionService {
         if (invStock.getQuantity() < product.getQuantity()) {
             return null;
         }
-        int yesPresentNumber = casesYesPresent(product, promotionName);
+        int yesPresentNumber = 0;
+        if ((yesPresentNumber = casesYesPresent(product, promotionName)) == 0) {
+            return null;
+        }
         return new Products(pr, promo, yesPresentNumber);
     }
 
