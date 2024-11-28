@@ -13,6 +13,7 @@ public class StoreController {
     }
 
     public void run() {
+        outputView.printWelcome();
         
     }
 }

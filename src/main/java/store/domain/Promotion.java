@@ -22,6 +22,14 @@ public class Promotion {
         return this.name;
     }
 
+    public int getBuy() {
+        return this.buy;
+    }
+
+    public int getGet() {
+        return this.get;
+    }
+
     public Date getStartDate() {
         return this.startDate;
     }
