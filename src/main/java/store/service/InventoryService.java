@@ -1,5 +1,6 @@
 package store.service;
 
+import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
 import store.domain.Inventory;
@@ -12,7 +13,7 @@ public class InventoryService {
     // 파일 입력 products to inventory  resetting service
     // 1. inventory stock setting / 프로모만 존재 일반재고 미존재 추가
     public List<Inventory> resettingReadInventory(List<Products> products) {
-        List<Inventory> inventories = new LinkedList<>();
+        List<Inventory> inventories = new ArrayList<>();
         for (Products product : products) {
             addToInvetoryProduct(inventories, product);
         }
@@ -42,6 +43,7 @@ public class InventoryService {
             if (product.getPromotion() != null) {
                 Product pr = product.getProduct();
                 inventory.getProducts().add(new Products(pr, null, 0));
+                break;
             }
         }
     }

@@ -20,14 +20,16 @@ public class StoreController {
     final OutputView outputView;
     final InventoryService inventoryService;
     final PromotionService promotionService;
+    final RecieptController recieptController;
 
     public StoreController(InputView inputView, OutputView outputView, InventoryService inventoryService,
-                           PromotionService promotionService)
+                           PromotionService promotionService, RecieptController recieptController)
             throws IOException, ParseException {
         this.inputView = inputView;
         this.outputView = outputView;
         this.inventoryService = inventoryService;
         this.promotionService = promotionService;
+        this.recieptController = recieptController;
     }
 
     final List<Promotion> promotions = FileRead.fileReadToPromotion();
@@ -52,11 +54,18 @@ public class StoreController {
             if (cannotPresents.size() != 0) {
                 setNotPresent(restart, cannotPresents);
             }
-            boolean isMembership = false;
-            if (getMemebershipHandler().equals("Y")) {
-                isMembership = true;
+            String membership;
+            if ((membership = getMemebershipHandler()).equals("Y")) {
+                Reciept reciept = new Reciept(buyProducts, presentations, true);
+                outputView.printReciept(reciept,
+                        recieptController.getMembershipDiscount(reciept, setInventory, buyProducts));
+            } else if (membership.equals("N")) {
+                Reciept reciept = new Reciept(buyProducts, presentations, false);
+                outputView.printReciept(reciept, 0);
             }
-            outputView.printReciept(new Reciept(buyProducts, presentations, isMembership));
+
+            restart = getReBuyHandler();
+            setInventory = inventoryService.resettingInventoryAfterBuying(setInventory, buyProducts);
         }
     }
 
@@ -71,9 +80,9 @@ public class StoreController {
 
     public void setNotPresent(String restart, List<Products> cannotPresents) {
         for (Products prs : cannotPresents) {
-            if (getYesMorePromotionHandler(prs).equals("Y")) {
+            if (getNoMorePromotionHandler(prs).equals("Y")) {
                 continue;
-            } else if (getYesMorePromotionHandler(prs).equals("N")) {
+            } else if (getNoMorePromotionHandler(prs).equals("N")) {
                 restart = getReBuyHandler();
                 break;
             }

@@ -22,4 +22,32 @@ public class Reciept {
     }
 
     /// 가격계산 여기서 처리
+    public int getPriceOneProduct(Products product) {
+        return product.getQuantity() * product.getProduct().getPrice();
+    }
+
+    public int getTotalCount() {
+        int sum = 0;
+        for (Products product : buyingProducts) {
+            sum += product.getQuantity();
+        }
+        return sum;
+    }
+
+    public int getTotalPrice() {
+        int sum = 0;
+        for (Products product : buyingProducts) {
+            sum += product.getQuantity() * product.getProduct().getPrice();
+        }
+        return sum;
+    }
+
+    public int getPresentDiscount() {
+        int sum = 0;
+        for (Products product : presentProducts) {
+            sum += product.getQuantity() * product.getProduct().getPrice();
+        }
+        return sum;
+    }
+
 }

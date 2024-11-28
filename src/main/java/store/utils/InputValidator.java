@@ -4,9 +4,9 @@ import store.enums.ErrorMessage;
 
 public class InputValidator {
     public static boolean isProductExist(String input) {
-        String[] inputs = input.replaceAll("[\\\\[\\\\]]", "").replaceAll(",", "-").split("-");
+        String[] inputs = input.replaceAll("[\\[\\]]", "").replaceAll(",", "-").split("-");
         try {
-            for (int i = 0; i < inputs.length; i += 2) {
+            for (int i = 0; i < inputs.length - 1; i += 2) {
                 String name = inputs[i];
                 int count = Integer.parseInt(inputs[i + 1]);
             }
@@ -17,8 +17,8 @@ public class InputValidator {
     }
 
     public static boolean isCountZero(String input) {
-        String[] inputs = input.replaceAll("[\\\\[\\\\]]", "").replaceAll(",", "-").split("-");
-        for (int i = 0; i < inputs.length; i += 2) {
+        String[] inputs = input.replaceAll("[\\[\\]]", "").replaceAll(",", "-").split("-");
+        for (int i = 0; i < inputs.length - 1; i += 2) {
             String name = inputs[i];
             if (name.equals("") || name.equals(" ")) {
                 throw new IllegalArgumentException(ErrorMessage.INVALID_INPUT.getErrorMessage());

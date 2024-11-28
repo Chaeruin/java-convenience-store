@@ -1,23 +1,61 @@
 package store.service;
 
-import java.util.LinkedList;
+import java.util.ArrayList;
 import java.util.List;
 import store.domain.Inventory;
 import store.domain.Product;
 import store.domain.Products;
 import store.domain.Promotion;
 import store.enums.PromotionName;
+import store.utils.DateConverter;
 import store.utils.Finder;
 
 public class PromotionService {
 
+    // addToPromotions
+    public List<Products> addToPromotions(List<Inventory> inventories, List<Products> buyProducts) {
+        List<Products> promoteProduct = new ArrayList<>();
+
+        for (Products product : buyProducts) {
+            if (product.getPromotion() != null && DateConverter.isDateInPromotions(product.getPromotion())) {
+                Inventory inv = Finder.findInventoryByName(inventories, product.getProduct().getName());
+                promoteProduct.add(getPromote(product, inv));
+            }
+        }
+        return promoteProduct;
+    }
+
+    public Products getPromote(Products product, Inventory inventory) {
+        String promotionName = product.getPromotion().getName();
+        Product pr = product.getProduct();
+        Promotion promo = product.getPromotion();
+        Products invStock = Finder.findProductByName(inventory.getProducts(), pr.getName());
+        int presentNumber = product.getQuantity();
+        if (invStock.getQuantity() < product.getQuantity()) {
+            presentNumber = invStock.getQuantity();
+        }
+        return casesPromote(promotionName, pr, promo, presentNumber);
+    }
+
+    public Products casesPromote(String promotionName, Product pr, Promotion promo,
+                                 int presentNumber) {
+        if (promotionName.equals(PromotionName.SPARKLING.getName())) {
+            return new Products(pr, promo, (presentNumber / 3) * 3);
+        } else if (promotionName.equals(PromotionName.MD_RECOMMAND.getName())) {
+            return new Products(pr, promo, (presentNumber / 2) * 2);
+        } else if (promotionName.equals(PromotionName.BRIEF_DISCOUNT.getName())) {
+            return new Products(pr, promo, (presentNumber / 2) * 2);
+        }
+        return null;
+    }
+
 
     // 프로모션 적용 품목 증정 리스트 추가
     public List<Products> addToPresent(List<Inventory> inventories, List<Products> buyProducts) {
-        List<Products> presentations = new LinkedList<>();
+        List<Products> presentations = new ArrayList<>();
 
         for (Products product : buyProducts) {
-            if (product.getPromotion() != null) {
+            if (product.getPromotion() != null && DateConverter.isDateInPromotions(product.getPromotion())) {
                 Inventory inv = Finder.findInventoryByName(inventories, product.getProduct().getName());
                 presentations.add(getPresent(product, inv));
             }
@@ -51,10 +89,10 @@ public class PromotionService {
 
     // 프로모션 미적용 품목 있음을 알림
     public List<Products> addNotPresent(List<Inventory> inventories, List<Products> buyProducts) {
-        List<Products> cannotPresent = new LinkedList<>();
+        List<Products> cannotPresent = new ArrayList<>();
 
         for (Products product : buyProducts) {
-            if (product.getPromotion() != null) {
+            if (product.getPromotion() != null && DateConverter.isDateInPromotions(product.getPromotion())) {
                 Inventory inv = Finder.findInventoryByName(inventories, product.getProduct().getName());
                 cannotPresent.add(getCannotPresent(product, inv));
             }
@@ -84,10 +122,10 @@ public class PromotionService {
 
     // 프로모션 적용 가능 품목 있음을 알림
     public List<Products> addYesPresent(List<Inventory> inventories, List<Products> buyProducts) {
-        List<Products> canPresent = new LinkedList<>();
+        List<Products> canPresent = new ArrayList<>();
 
         for (Products product : buyProducts) {
-            if (product.getPromotion() != null) {
+            if (product.getPromotion() != null && DateConverter.isDateInPromotions(product.getPromotion())) {
                 Inventory inv = Finder.findInventoryByName(inventories, product.getProduct().getName());
                 canPresent.add(getCanPresent(product, inv));
             }

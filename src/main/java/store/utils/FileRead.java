@@ -5,9 +5,9 @@ import java.io.File;
 import java.io.FileReader;
 import java.io.IOException;
 import java.text.ParseException;
-import java.time.LocalDateTime;
+import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
-import java.util.LinkedList;
+import java.util.ArrayList;
 import java.util.List;
 import store.domain.Product;
 import store.domain.Products;
@@ -16,8 +16,9 @@ import store.domain.Promotion;
 public class FileRead {
 
     public static List<Products> fileReadToInventory(List<Promotion> promotions) throws IOException {
-        File aText = new File("../../resources/products.md");
-        List<Products> products = new LinkedList<>();
+        ClassLoader classLoader = FileRead.class.getClassLoader();
+        File aText = new File(classLoader.getResource("products.md").getFile());
+        List<Products> products = new ArrayList<>();
 
         FileReader aReader = new FileReader(aText);
         BufferedReader br = new BufferedReader(aReader);
@@ -36,8 +37,9 @@ public class FileRead {
     }
 
     public static List<Promotion> fileReadToPromotion() throws IOException, ParseException {
-        File aText = new File("../../resources/promotions.md");
-        List<Promotion> promotions = new LinkedList<>();
+        ClassLoader classLoader = FileRead.class.getClassLoader();
+        File aText = new File(classLoader.getResource("promotions.md").getFile());
+        List<Promotion> promotions = new ArrayList<>();
 
         FileReader aReader = new FileReader(aText);
         BufferedReader br = new BufferedReader(aReader);
@@ -46,8 +48,8 @@ public class FileRead {
         while ((input = br.readLine()) != null) {
             String[] inputs = input.split(",");
             DateTimeFormatter sf = DateTimeFormatter.ofPattern("yyyy-MM-dd");
-            LocalDateTime startDate = LocalDateTime.parse(inputs[3], sf);
-            LocalDateTime endDate = LocalDateTime.parse(inputs[4], sf);
+            LocalDate startDate = LocalDate.parse(inputs[3], sf);
+            LocalDate endDate = LocalDate.parse(inputs[4], sf);
             Promotion promotion = new Promotion(inputs[0], Integer.parseInt(inputs[1]), Integer.parseInt(inputs[2]),
                     startDate, endDate);
             promotions.add(promotion);

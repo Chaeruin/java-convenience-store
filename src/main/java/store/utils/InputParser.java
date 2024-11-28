@@ -1,6 +1,6 @@
 package store.utils;
 
-import java.util.LinkedList;
+import java.util.ArrayList;
 import java.util.List;
 import store.domain.Inventory;
 import store.domain.Product;
@@ -11,8 +11,8 @@ import store.enums.ErrorMessage;
 public class InputParser {
 
     public static List<Products> parseBuyProducts(List<Inventory> inventories, List<Products> products, String input) {
-        String[] inputs = input.replaceAll("[\\\\[\\\\]]", "").replaceAll(",", "-").split("-");
-        List<Products> buyProducts = new LinkedList<>();
+        String[] inputs = input.replaceAll("[\\[\\]]", "").replaceAll(",", "-").split("-");
+        List<Products> buyProducts = new ArrayList<>();
         if (InputValidator.isProductExist(input) && InputValidator.isCountZero(input)) {
             addToList(inputs, inventories, products, buyProducts);
         }

@@ -23,7 +23,7 @@ public class OutputView {
         StringBuilder sb = new StringBuilder();
         DecimalFormat df = new DecimalFormat();
         for (Products product : inventory.getProducts()) {
-            sb.append("-").append(product.getProduct().getName()).append(" ");
+            sb.append("- ").append(product.getProduct().getName()).append(" ");
             sb.append(df.format(product.getProduct().getPrice())).append("원 ");
             if (product.getQuantity() == 0) {
                 sb.append("재고 없음");
@@ -34,20 +34,29 @@ public class OutputView {
                 sb.append(product.getPromotion().getName());
             }
             System.out.println(sb);
+            sb = new StringBuilder();
         }
     }
 
-    public void printReciept(Reciept reciept) {
-
+    public void printReciept(Reciept reciept, int membershipDiscount) {
+        DecimalFormat df = new DecimalFormat();
         System.out.println("===========W 편의점=============");
         System.out.println("상품명\t수량\t금액");
         for (Products bp : reciept.getBuyingProducts()) {
-            System.out.println(bp.getProduct().getName() + "\t" + bp.getQuantity() + "\t" + "금액");
+            System.out.println(bp.getProduct().getName() + "\t" + bp.getQuantity() + "\t" + df.format(
+                    bp.getProduct().getPrice() * bp.getQuantity()));
         }
-        System.out.println("===========증 정=============");
-        for (Products pp : reciept.getBuyingProducts()) {
+        if (reciept.getPresentProducts().size() != 0) {
+            System.out.println("===========증 정=============");
+        }
+        for (Products pp : reciept.getPresentProducts()) {
             System.out.println(pp.getProduct().getName() + "\t" + pp.getQuantity());
         }
-
+        System.out.println("==============================");
+        System.out.println("총구매액\t\t" + reciept.getTotalCount() + "\t" + df.format(reciept.getTotalPrice()));
+        System.out.println("행사할인\t\t" + "-" + df.format(reciept.getPresentDiscount()));
+        System.out.println("멤버십할인\t\t" + "-" + df.format(membershipDiscount));
+        System.out.println(
+                "내실돈\t\t" + df.format(reciept.getTotalPrice() - membershipDiscount - reciept.getPresentDiscount()));
     }
 }
