@@ -39,6 +39,12 @@ public class OutputView {
     }
 
     public void printReciept(Reciept reciept, int membershipDiscount) {
+        printTotal(reciept);
+        printPresent(reciept);
+        printResult(reciept, membershipDiscount);
+    }
+
+    public void printTotal(Reciept reciept) {
         DecimalFormat df = new DecimalFormat();
         System.out.println("===========W 편의점=============");
         System.out.println("상품명\t수량\t금액");
@@ -46,12 +52,19 @@ public class OutputView {
             System.out.println(bp.getProduct().getName() + "\t" + bp.getQuantity() + "\t" + df.format(
                     bp.getProduct().getPrice() * bp.getQuantity()));
         }
+    }
+
+    public void printPresent(Reciept reciept) {
         if (reciept.getPresentProducts().size() != 0) {
             System.out.println("===========증 정=============");
         }
         for (Products pp : reciept.getPresentProducts()) {
             System.out.println(pp.getProduct().getName() + "\t" + pp.getQuantity());
         }
+    }
+
+    public void printResult(Reciept reciept, int membershipDiscount) {
+        DecimalFormat df = new DecimalFormat();
         System.out.println("==============================");
         System.out.println("총구매액\t\t" + reciept.getTotalCount() + "\t" + df.format(reciept.getTotalPrice()));
         System.out.println("행사할인\t\t" + "-" + df.format(reciept.getPresentDiscount()));

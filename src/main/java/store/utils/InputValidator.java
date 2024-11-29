@@ -23,8 +23,7 @@ public class InputValidator {
             if (name.equals("") || name.equals(" ")) {
                 throw new IllegalArgumentException(ErrorMessage.INVALID_INPUT.getErrorMessage());
             }
-            int count = Integer.parseInt(inputs[i + 1]);
-            if (count == 0) {
+            if (Integer.parseInt(inputs[i + 1]) == 0) {
                 throw new IllegalArgumentException(ErrorMessage.INVALID_INPUT.getErrorMessage());
             }
         }

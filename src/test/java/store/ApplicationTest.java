@@ -8,6 +8,7 @@ import camp.nextstep.edu.missionutils.test.NsTest;
 import java.io.IOException;
 import java.text.ParseException;
 import java.time.LocalDate;
+import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
 class ApplicationTest extends NsTest {
@@ -103,10 +104,56 @@ class ApplicationTest extends NsTest {
     }
 
     @Test
+    @DisplayName("예외 테스트_재고 수량 초과")
     void 예외_테스트() {
         assertSimpleTest(() -> {
             runException("[컵라면-12]", "N", "N");
             assertThat(output()).contains("[ERROR] 재고 수량을 초과하여 구매할 수 없습니다. 다시 입력해 주세요.");
+        });
+    }
+
+    @Test
+    @DisplayName("예외 테스트_존재하지 않는 품목")
+    void 예외_테스트2() {
+        assertSimpleTest(() -> {
+            runException("[껌-1]", "N", "N");
+            assertThat(output()).contains("[ERROR]");
+        });
+    }
+
+    @Test
+    @DisplayName("예외 테스트_입력 포맷팅 오류")
+    void 예외_테스트3() {
+        assertSimpleTest(() -> {
+            runException(";콜라-2{", "N", "N");
+            assertThat(output()).contains("[ERROR]");
+        });
+    }
+
+    @Test
+    @DisplayName("예외 테스트_수량 0개 구매 예외")
+    void 예외_테스트4() {
+        assertSimpleTest(() -> {
+            runException("[콜라-0]", "N", "N");
+            assertThat(output()).contains("[ERROR]");
+        });
+    }
+
+    @Test
+    @DisplayName("예외 테스트_빈 문자 상품 구매 시도 예외")
+    void 예외_테스트5() {
+        assertSimpleTest(() -> {
+            runException("[-2]", "N", "N");
+            assertThat(output()).contains("[ERROR]");
+        });
+    }
+
+    @Test
+    @DisplayName("예외 테스트_Y/N 이외 대답 예외")
+    void 예외_테스트6() {
+        assertSimpleTest(() -> {
+            runException("[콜라-2]", "K", "ㅏ");
+            assertThat(output()).contains("[ERROR]");
         });
     }
 

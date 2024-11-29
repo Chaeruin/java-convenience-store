@@ -48,25 +48,35 @@ public class StoreController {
             List<Products> cannotPresents = promotionService.addNotPresent(setInventory, buyProducts);
             List<Products> canPresents = promotionService.addYesPresent(setInventory, buyProducts);
 
-            if (canPresents.size() != 0) {
-                setPresent(buyProducts, canPresents, presentations);
-                cannotPresents = promotionService.addNotPresent(setInventory, buyProducts);
-            }
-            if (cannotPresents.size() != 0) {
-                setNotPresent(restart, cannotPresents);
-            }
-            String membership;
-            if ((membership = getMemebershipHandler()).equals("Y")) {
-                Reciept reciept = new Reciept(buyProducts, presentations, true);
-                outputView.printReciept(reciept,
-                        recieptController.getMembershipDiscount(reciept, setInventory, buyProducts));
-            } else if (membership.equals("N")) {
-                Reciept reciept = new Reciept(buyProducts, presentations, false);
-                outputView.printReciept(reciept, 0);
-            }
+            printAndGetAboutPresent(restart, buyProducts, presentations, canPresents, cannotPresents);
+
+            getMembershipAndPrintReciept(buyProducts, presentations);
 
             restart = getReBuyHandler();
             setInventory = inventoryService.resettingInventoryAfterBuying(setInventory, buyProducts);
+        }
+    }
+
+    public void printAndGetAboutPresent(String restart, List<Products> buyProducts, List<Products> presentations,
+                                        List<Products> canPresents, List<Products> cannotPresents) {
+        if (canPresents.size() != 0) {
+            setPresent(buyProducts, canPresents, presentations);
+            cannotPresents = promotionService.addNotPresent(setInventory, buyProducts);
+        }
+        if (cannotPresents.size() != 0) {
+            setNotPresent(restart, cannotPresents);
+        }
+    }
+
+    public void getMembershipAndPrintReciept(List<Products> buyProducts, List<Products> presentations) {
+        String membership;
+        if ((membership = getMemebershipHandler()).equals("Y")) {
+            Reciept reciept = new Reciept(buyProducts, presentations, true);
+            outputView.printReciept(reciept,
+                    recieptController.getMembershipDiscount(reciept, setInventory, buyProducts));
+        } else if (membership.equals("N")) {
+            Reciept reciept = new Reciept(buyProducts, presentations, false);
+            outputView.printReciept(reciept, 0);
         }
     }
 
