@@ -59,6 +59,30 @@ public class InventoryService {
 
     // 구매 후 inventory resetting service
     public List<Inventory> resettingInventoryAfterBuying(List<Inventory> inventories, List<Products> buyList) {
-        return null;
+        for (Inventory inventory : inventories) {
+            findProductAtInventoryAndSetting(inventory, buyList);
+        }
+        return inventories;
+    }
+
+    public void findProductAtInventoryAndSetting(Inventory inventory, List<Products> buyList) {
+        for (Products product : buyList) {
+            Products findProduct = Finder.findProductByName(inventory.getProducts(), product.getProduct().getName());
+            if (findProduct != null) {
+                setConditionalStocks(inventory, product, findProduct);
+            }
+        }
+    }
+
+    public void setConditionalStocks(Inventory inventory, Products product, Products findProduct) {
+        inventory.setStocks(inventory.getStocks() - product.getQuantity());
+        if (product.getQuantity() > findProduct.getQuantity()) {
+            Products findNullPromotionProduct = Finder.findNullPromotionProduct(inventory.getProducts(), findProduct);
+            findNullPromotionProduct.setQuantity(findNullPromotionProduct.getQuantity() - (product.getQuantity()
+                    - findProduct.getQuantity()));
+            findProduct.setQuantity(0);
+        } else if (product.getQuantity() <= findProduct.getQuantity()) {
+            findProduct.setQuantity(findProduct.getQuantity() - product.getQuantity());
+        }
     }
 }

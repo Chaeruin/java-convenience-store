@@ -26,7 +26,7 @@ public class OutputView {
             sb.append("- ").append(product.getProduct().getName()).append(" ");
             sb.append(df.format(product.getProduct().getPrice())).append("원 ");
             if (product.getQuantity() == 0) {
-                sb.append("재고 없음");
+                sb.append("재고 없음 ");
             } else {
                 sb.append(product.getQuantity()).append("개 ");
             }

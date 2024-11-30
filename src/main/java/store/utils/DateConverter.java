@@ -8,6 +8,9 @@ public class DateConverter {
 
     public static boolean isDateInPromotions(Promotion promotion) {
         LocalDate now = LocalDate.from(DateTimes.now());
+        if (promotion == null) {
+            return false;
+        }
         if ((now.isAfter(promotion.getStartDate()) && now.isBefore(promotion.getEndDate())) ||
                 now.isEqual(promotion.getStartDate()) ||
                 now.isEqual(promotion.getEndDate())) {
